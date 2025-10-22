@@ -3,7 +3,9 @@
 # Veo 3 Video Generation Script
 # Usage: ./veo3.sh
 API_KEY="your-api-key-here"
-PROMPT="A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset."
+PROMPT="""
+A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset.
+"""
 IMAGE_PATH="/Users/leonard/thucchien/images/img_00:37:00.png"
 
 echo "🎬 Starting Veo 3 Video Generation..."
