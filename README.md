@@ -9,61 +9,26 @@ Chỉnh sửa `config.py` và thêm API key của bạn.
 
 ## Sử dụng
 
-### CLI (Command Line)
+### Individual Scripts
 
 ```bash
-python main.py text "viết bài thơ về mùa thu"
+# Text generation
+python text.py
 
-python main.py chat-img "a breathtaking waterfall scene" gemini-2.5-flash-image-preview
+# Image generation (Imagen-4)
+python imgen4.py
 
-python main.py img "a beautiful sunset" imagen-4 aspect_ratio=16:9
+# Image generation (Gemini)
+python bnn.py
 
-python main.py video "a bird flying" veo-3
+# Video generation (Veo 3)
+python veo3.py
 
-python main.py tts "Xin chào" tts-1 voice=alloy
+# Speech generation
+python speech.py
 ```
 
-**Lưu ý:** 
-- Ảnh sẽ tự động lưu vào thư mục `images/` với tên `img_YYYYMMDD_HHMMSS.png`
-- Audio sẽ tự động lưu vào thư mục `audio/` với tên `tts_YYYYMMDD_HHMMSS.mp3`
-
-### Python Code
-
-```python
-from main import gen, save_image
-
-result = gen("text", "viết bài thơ về mùa thu")
-
-result = gen("chat-img", "a breathtaking waterfall scene", model="gemini-2.5-flash-image-preview")
-if "choices" in result:
-    images = result["choices"][0]["message"].get("images", [])
-    for img in images:
-        url = img.get("image_url", {}).get("url")
-        filename = save_image(url)
-        print(f"Image saved: {filename}")
-
-result = gen("img", "a beautiful sunset", aspect_ratio="16:9")
-if "data" in result and "b64_json" in result["data"][0]:
-    filename = save_image(result["data"][0]["b64_json"])
-    print(f"Image saved: {filename}")
-
-result = gen("video", "a bird flying in the sky")
-
-audio = gen("tts", "Xin chào, đây là test text to speech")
-```
-
-### Tham số job:
-- `"text"` - Text generation
-- `"chat-img"` - Image generation via chat completions (Gemini models)
-- `"img"` - Image generation via images endpoint (Imagen models)
-- `"video"` - Video generation
-- `"tts"` - Text-to-speech
-
-### Tham số tùy chọn:
-- `model` - Tên model cụ thể
-- `**kwargs` - Các tham số bổ sung (size, voice, temperature, etc.)
-
-## Check Models
+### Check Models & API Info
 
 ```bash
 # List tất cả models
@@ -71,26 +36,72 @@ python models.py
 
 # Check model cụ thể
 python models.py gpt-4o-mini
+
+# Check API key info
+python checkusage.py
 ```
 
-## API GET Requests
+## Prompt Management
 
-```bash
-# List models
-python get_api.py v1/models
+Tất cả prompts được quản lý tập trung trong `prompts.py`:
 
-# Get model info
-python get_api.py v1/models/gpt-4
+```python
+# prompts.py
+TEXT_PROMPT = """
+    Hãy viết một câu giới thiệu về Việt Nam.
+"""
 
-# Get usage
-python get_api.py v1/usage
+IMG_PROMPT = """
+    a digital render of a massive skyscraper, modern, grand, epic with a beautiful sunset in the background
+"""
 
-# Get balance
-python get_api.py v1/balance
+VIDEO_PROMPT = """
+    A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset.
+"""
 
-# Get key info
-python get_api.py key/info
+SPEECH_PROMPT = """
+    Xin chào, đây là một thử nghiệm chuyển văn bản thành giọng nói qua AI Thực Chiến gateway.
+"""
+```
 
-# Custom endpoint với params
-python get_api.py v1/custom_endpoint key=value
+**Chỉnh sửa prompts:** Mở `prompts.py` và thay đổi nội dung các biến.
+
+## Output Files
+
+- **Images:** `images/img_HH:MM:SS.png`
+- **Videos:** `videos/video_HH:MM:SS.mp4`
+- **Audio:** `audio/speech_HH:MM:SS.mp3`
+- **Logs:** `logs/log.json` (tạo mới mỗi lần chạy)
+
+## Logging
+
+Tất cả requests và responses được log vào `logs/log.json` với format:
+
+```json
+{
+    "timestamp": "14:30:25",
+    "type": "text_generation",
+    "request": {...},
+    "response": {...},
+    "saved_file": "images/img_14:30:25.png"
+}
+```
+
+## File Structure
+
+```
+thucchien/
+├── config.py          # API key và URL
+├── prompts.py         # Tất cả prompts
+├── text.py           # Text generation
+├── imgen4.py         # Image generation (Imagen)
+├── bnn.py            # Image generation (Gemini)
+├── veo3.py           # Video generation
+├── speech.py         # Speech generation
+├── models.py         # Check available models
+├── checkusage.py     # Check API key info
+├── images/           # Generated images
+├── videos/           # Generated videos
+├── audio/            # Generated audio
+└── logs/             # Log files
 ```
