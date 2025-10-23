@@ -2,7 +2,7 @@
 
 # Veo 3 Video Generation Script
 # Usage: ./veo3.sh
-API_KEY="sk-eC6PhnYR8hhW7AmGtQsNxQ"
+API_KEY="YOUR_API_KEY"
 PROMPT="""
 A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset.
 """
