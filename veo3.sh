@@ -2,7 +2,7 @@
 
 # Veo 3 Video Generation Script
 # Usage: ./veo3.sh
-API_KEY="your-api-key-here"
+API_KEY="sk-eC6PhnYR8hhW7AmGtQsNxQ"
 PROMPT="""
 A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset.
 """
@@ -72,40 +72,83 @@ if [ -z "$OPERATION_ID" ]; then
     exit 1
 fi
 
-# Bước 2: Check status
-echo ""
-echo "⏳ Step 2: Waiting for completion..."
-while true; do
-    STATUS_RESPONSE=$(curl -s "https://api.thucchien.ai/gemini/v1beta/models/veo-3.0-generate-001/operations/$OPERATION_ID" \
-    -H "x-goog-api-key: $API_KEY")
+# Save operation ID to JSON file with timestamp
+TIMESTAMP=$(date +%Y-%m-%d_%H:%M:%S)
+cat > "veo3_operation_${TIMESTAMP}.json" << EOF
+{
+  "timestamp": "$TIMESTAMP",
+  "operation_id": "$OPERATION_ID",
+  "prompt": "$PROMPT",
+  "image_path": "$IMAGE_PATH",
+  "status": "created"
+}
+EOF
+echo "💾 Operation saved to: veo3_operation_${TIMESTAMP}.json"
+
+# # Bước 2: Check status
+# echo ""
+# echo "⏳ Step 2: Waiting for completion..."
+# while true; do
+#     STATUS_RESPONSE=$(curl -s "https://api.thucchien.ai/gemini/v1beta/models/veo-3.0-generate-001/operations/$OPERATION_ID" \
+#     -H "x-goog-api-key: $API_KEY")
     
-    if echo $STATUS_RESPONSE | grep -q '"done":true'; then
-        echo "✅ Video generation completed!"
-        break
-    fi
+#     if echo $STATUS_RESPONSE | grep -q '"done":true'; then
+#         echo "✅ Video generation completed!"
+#         # Update JSON file with completion status
+#         COMPLETION_TIME=$(date +%Y-%m-%d_%H:%M:%S)
+#         cat > "veo3_operation_${TIMESTAMP}.json" << EOF
+# {
+#   "timestamp": "$TIMESTAMP",
+#   "operation_id": "$OPERATION_ID",
+#   "prompt": "$PROMPT",
+#   "image_path": "$IMAGE_PATH",
+#   "status": "completed",
+#   "completion_time": "$COMPLETION_TIME"
+# }
+# EOF
+#         echo "💾 Status updated in: veo3_operation_${TIMESTAMP}.json"
+#         break
+#     fi
     
-    PROGRESS=$(echo $STATUS_RESPONSE | grep -o '"progressPercentage":[0-9]*' | cut -d':' -f2)
-    echo "📊 Progress: $PROGRESS%"
-    sleep 10
-done
+#     PROGRESS=$(echo $STATUS_RESPONSE | grep -o '"progressPercentage":[0-9]*' | cut -d':' -f2)
+#     echo "📊 Progress: $PROGRESS%"
+#     sleep 10
+# done
 
-# Bước 3: Download video
-echo ""
-echo "📥 Step 3: Downloading video..."
-FILE_ID=$(echo $STATUS_RESPONSE | grep -o '"uri":"[^"]*"' | cut -d'/' -f4 | tr -d '"')
-echo "File ID: $FILE_ID"
+# # Bước 3: Download video
+# echo ""
+# echo "📥 Step 3: Downloading video..."
+# FILE_ID=$(echo $STATUS_RESPONSE | grep -o '"uri":"[^"]*"' | cut -d'/' -f4 | tr -d '"')
+# echo "File ID: $FILE_ID"
 
-if [ -z "$FILE_ID" ]; then
-    echo "❌ Failed to get file ID"
-    exit 1
-fi
+# if [ -z "$FILE_ID" ]; then
+#     echo "❌ Failed to get file ID"
+#     exit 1
+# fi
 
-TIMESTAMP=$(date +%H:%M:%S)
-curl "https://api.thucchien.ai/gemini/download/v1beta/files/$FILE_ID:download?alt=media" \
--H "x-goog-api-key: $API_KEY" \
---output "video_$TIMESTAMP.mp4"
+# DOWNLOAD_TIMESTAMP=$(date +%H:%M:%S)
+# curl "https://api.thucchien.ai/gemini/download/v1beta/files/$FILE_ID:download?alt=media" \
+# -H "x-goog-api-key: $API_KEY" \
+# --output "video_$DOWNLOAD_TIMESTAMP.mp4"
 
-echo "🎉 Video saved as: video_$TIMESTAMP.mp4"
+# echo "🎉 Video saved as: video_$DOWNLOAD_TIMESTAMP.mp4"
 
-# Clean up
-rm -f /tmp/veo3_request.json
+# # Update JSON file with download info
+# DOWNLOAD_TIME=$(date +%Y-%m-%d_%H:%M:%S)
+# cat > "veo3_operation_${TIMESTAMP}.json" << EOF
+# {
+#   "timestamp": "$TIMESTAMP",
+#   "operation_id": "$OPERATION_ID",
+#   "prompt": "$PROMPT",
+#   "image_path": "$IMAGE_PATH",
+#   "status": "downloaded",
+#   "completion_time": "$COMPLETION_TIME",
+#   "download_time": "$DOWNLOAD_TIME",
+#   "file_id": "$FILE_ID",
+#   "video_file": "video_$DOWNLOAD_TIMESTAMP.mp4"
+# }
+# EOF
+# echo "💾 Download info saved to: veo3_operation_${TIMESTAMP}.json"
+
+# # Clean up
+# rm -f /tmp/veo3_request.json
