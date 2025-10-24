@@ -109,6 +109,8 @@ IMG_NANOBANANA_PROMPT = """
     A breathtaking scene where a majestic waterfall cascades down rugged cliffs, shimmering like silver threads under the warm sunlight. Lush greenery surrounds the falls—towering trees, vibrant flowers, and soft moss painting nature's perfect canvas. Mist rises gently, forming a magical rainbow that arches across the sky, while birds soar gracefully above as if dancing to the music of nature. A dreamlike moment that blends serenity and beauty in one stunning view.
 """
 
+REF_IMG_URL = "example.jpg"
+
 # Video Generation Prompts
 VIDEO_PROMPT = """
     A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset.
