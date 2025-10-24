@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 from config import API_KEY
 from prompts import SPEECH_PROMPT
+from utils import append_log
 
 client = OpenAI(
     api_key=API_KEY,
@@ -26,7 +27,6 @@ response.stream_to_file(speech_file_path)
 print(f"File âm thanh đã được lưu tại: {speech_file_path}")
 
 # Log to file
-os.makedirs("logs", exist_ok=True)
 log_data = {
     "timestamp": timestamp,
     "type": "speech_generation",
@@ -40,6 +40,5 @@ log_data = {
     },
     "saved_file": str(speech_file_path)
 }
-with open("logs/log.json", "w", encoding="utf-8") as f:
-    f.write(json.dumps(log_data, indent=4, ensure_ascii=False))
+append_log(log_data)
 

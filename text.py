@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from config import API_KEY, API_URL
 from prompts import TEXT_PROMPT
+from utils import append_log
 
 url = f"{API_URL}/chat/completions"
 headers = {
@@ -31,7 +32,6 @@ if response.status_code == 200:
     print(result['choices'][0]['message']['content'])
     
     # Log to file
-    os.makedirs("logs", exist_ok=True)
     timestamp = datetime.now().strftime("%H:%M:%S")
     log_data = {
         "timestamp": timestamp,
@@ -39,14 +39,12 @@ if response.status_code == 200:
         "request": data,
         "response": result
     }
-    with open("logs/log.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(log_data, indent=4, ensure_ascii=False))
+    append_log(log_data)
 else:
     print(f"Error: {response.status_code}")
     print(response.text)
     
     # Log error
-    os.makedirs("logs", exist_ok=True)
     timestamp = datetime.now().strftime("%H:%M:%S")
     log_data = {
         "timestamp": timestamp,
@@ -57,6 +55,5 @@ else:
             "text": response.text
         }
     }
-    with open("logs/log.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(log_data, indent=4, ensure_ascii=False))
+    append_log(log_data)
 

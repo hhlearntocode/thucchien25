@@ -71,20 +71,31 @@ SPEECH_PROMPT = """
 - **Images:** `images/img_HH:MM:SS.png`
 - **Videos:** `videos/video_HH:MM:SS.mp4`
 - **Audio:** `audio/speech_HH:MM:SS.mp3`
-- **Logs:** `logs/log.json` (tạo mới mỗi lần chạy)
+- **Logs:** `logs/log.json` (lưu tất cả logs)
 
 ## Logging
 
-Tất cả requests và responses được log vào `logs/log.json` với format:
+Tất cả requests và responses được log vào `logs/log.json` dưới dạng mảng. Mỗi log entry sẽ được thêm vào, không ghi đè.
+
+Format của mỗi log entry:
 
 ```json
-{
-    "timestamp": "14:30:25",
-    "type": "text_generation",
-    "request": {...},
-    "response": {...},
-    "saved_file": "images/img_14:30:25.png"
-}
+[
+    {
+        "timestamp": "14:30:25",
+        "type": "text_generation",
+        "request": {...},
+        "response": {...},
+        "saved_file": "images/img_14:30:25.png"
+    },
+    {
+        "timestamp": "14:32:10",
+        "type": "image_generation",
+        "request": {...},
+        "response": {...},
+        "saved_file": "images/img_14:32:10.png"
+    }
+]
 ```
 
 ## File Structure
@@ -93,15 +104,16 @@ Tất cả requests và responses được log vào `logs/log.json` với format
 thucchien/
 ├── config.py          # API key và URL
 ├── prompts.py         # Tất cả prompts
-├── text.py           # Text generation
-├── imgen4.py         # Image generation (Imagen)
-├── bnn.py            # Image generation (Gemini)
-├── veo3.py           # Video generation
-├── speech.py         # Speech generation
-├── models.py         # Check available models
-├── checkusage.py     # Check API key info
-├── images/           # Generated images
-├── videos/           # Generated videos
-├── audio/            # Generated audio
-└── logs/             # Log files
+├── utils.py           # Helper functions (logging)
+├── text.py            # Text generation
+├── imgen4.py          # Image generation (Imagen)
+├── bnn.py             # Image generation (Gemini)
+├── veo3.py            # Video generation
+├── speech.py          # Speech generation
+├── models.py          # Check available models
+├── checkusage.py      # Check API key info
+├── images/            # Generated images
+├── videos/            # Generated videos
+├── audio/             # Generated audio
+└── logs/              # Log files
 ```

@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 from config import API_KEY
 from prompts import IMG_NANOBANANA_PROMPT
+from utils import append_log
 
 client = OpenAI(
     api_key=API_KEY,
@@ -34,7 +35,6 @@ with open(filename, "wb") as f:
 print(f"Image saved to {filename}")
 
 # Log to file
-os.makedirs("logs", exist_ok=True)
 log_data = {
     "timestamp": timestamp,
     "type": "image_generation_gemini",
@@ -49,6 +49,5 @@ log_data = {
     },
     "saved_file": filename
 }
-with open("logs/log.json", "w", encoding="utf-8") as f:
-    f.write(json.dumps(log_data, indent=4, ensure_ascii=False))
+append_log(log_data)
 

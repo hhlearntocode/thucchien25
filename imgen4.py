@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 from config import API_KEY, API_URL
 from prompts import IMG_PROMPT
+from utils import append_log
 
 url = f"{API_URL}/images/generations"
 headers = {
@@ -35,7 +36,6 @@ if response.status_code == 200:
     print(f"Image saved to {filename}")
     
     # Log to file
-    os.makedirs("logs", exist_ok=True)
     log_data = {
         "timestamp": timestamp,
         "type": "image_generation",
@@ -43,14 +43,12 @@ if response.status_code == 200:
         "response": result,
         "saved_file": filename
     }
-    with open("logs/log.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(log_data, indent=4, ensure_ascii=False))
+    append_log(log_data)
 else:
     print(f"Error: {response.status_code}")
     print(response.text)
     
     # Log error
-    os.makedirs("logs", exist_ok=True)
     timestamp = datetime.now().strftime("%H:%M:%S")
     log_data = {
         "timestamp": timestamp,
@@ -61,6 +59,5 @@ else:
             "text": response.text
         }
     }
-    with open("logs/log.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(log_data, indent=4, ensure_ascii=False))
+    append_log(log_data)
 
