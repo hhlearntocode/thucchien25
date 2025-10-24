@@ -3,26 +3,22 @@ import base64
 import os
 import json
 from datetime import datetime
-from config import API_KEY
+from config import API_KEY, REF_IMG_URL
 from utils import append_log
-from prompts import IMG_NANOBANANA_PROMPT, REF_IMG_URL
+from prompts import IMG_NANOBANANA_PROMPT
 
 client = OpenAI(api_key=API_KEY, base_url="https://api.thucchien.ai")
 
-if REF_IMG_URL:
+if REF_IMG_URL and REF_IMG_URL!="example.jpg":
     with open(REF_IMG_URL, "rb") as img_file:
         img_data = img_file.read()
     encoded_img = base64.b64encode(img_data).decode("utf-8")
-    IMG_NANOBANANA_PROMPT = (
-        f"Reference image: data:image/jpeg;base64,{encoded_img}\n"
-        + IMG_NANOBANANA_PROMPT
-    )
 else:
     print("No reference image found, proceeding without it.")
 
 response = client.chat.completions.create(
     model="gemini-2.5-flash-image-preview",
-    messages=[{"role": "user", "content": IMG_NANOBANANA_PROMPT.strip()}],
+    messages=[{"role": "user", "content": "giữ nền" + "\nReference image: data:image/jpeg;base64," + encoded_img}],
     modalities=["image"],
 )
 

@@ -2,11 +2,11 @@
 
 # Veo 3 Video Generation Script
 # Usage: ./veo3.sh
-API_KEY="YOUR_API_KEY"
+API_KEY="sk--CYo4GYicR6jeaozGPkcnA"
 PROMPT="""
-A cinematic shot of a baby raccoon wearing a tiny cowboy hat, riding a miniature pony through a field of daisies at sunset.
+    Animate the image with a gentle, dreamlike floating motion. Digital particles transform into beautiful, abstract glowing shapes (like digital butterflies or fractals). Ethereal and soft lighting. Creative, magical, innovative mood.
 """
-IMAGE_PATH="/Users/leonard/thucchien/images/img_00:37:00.png"
+IMAGE_PATH="images/5.png"
 
 echo "🎬 Starting Veo 3 Video Generation..."
 echo "Prompt: $PROMPT"

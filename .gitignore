@@ -1,7 +1,6 @@
 videos/
 images/
 audio/
-logs/
 *.mp4
 *.mp3
 *.png
@@ -11,5 +10,4 @@ config.py
 __pycache__/
 *.pyc
 generated_*
-log.json
 
